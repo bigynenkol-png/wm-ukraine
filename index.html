@@ -217,6 +217,19 @@ img { display: block; max-width: 100%; }
           mask: var(--icon) center / contain no-repeat;
 }
 .burger { display: none; }
+/* дві смужки меню: при відкритті сходяться в центр і повертаються в хрестик */
+.burger__lines { position: relative; display: block; width: 16px; height: 8px; }
+.burger__lines i {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 1.6px;
+  border-radius: 1px;
+  background: currentColor;
+  transition: transform .35s var(--ease);
+}
+.burger__lines i + i { top: auto; bottom: 0; }
+.nav.is-open .burger__lines i:first-child { transform: translateY(3.2px) rotate(45deg); }
+.nav.is-open .burger__lines i + i { transform: translateY(-3.2px) rotate(-45deg); }
 
 /* ---------- Hero: світлий фон, сітка, світіння, макрофото кабелю праворуч ---------- */
 .hero {
@@ -787,6 +800,9 @@ img { display: block; max-width: 100%; }
 }
 @media (max-width: 720px) {
   .sec__head { grid-template-columns: 1fr; gap: 12px; }
+  /* заголовки на всю ширину: без обмеження в 17em і без ручних переносів усередині сірої частини */
+  .sec__title { max-width: none; text-wrap: pretty; }
+  .sec__title span br { display: none; }
   .sec__eyebrow { padding-top: 0; }
   .sec__lead { font-size: 16px; white-space: normal; }
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 116px; }
@@ -1017,7 +1033,18 @@ img { display: block; max-width: 100%; }
 }
 @media (max-width: 720px) {
   .kit { grid-template-columns: 1fr; }
-  .kit__set { flex-wrap: wrap; row-gap: 8px; }
+  /* комплект стовпчиком: картки праворуч одна під одною, «+» у лівій колонці між ними */
+  .kit__set { flex-direction: column; align-items: stretch; gap: 8px; padding-left: 22px; }
+  .kit__set li { position: relative; display: block; }
+  .kit__set b { width: 100%; }
+  .kit__set li + li::before {
+    position: absolute;
+    left: -22px; top: -4px;
+    width: 22px;
+    text-align: left;
+    line-height: 1;
+    transform: translateY(-50%);
+  }
   .kit .br-narrow, .kit .br-wide { display: none; }
   .kit .btn { justify-content: space-between; }
 }
@@ -1431,14 +1458,16 @@ img { display: block; max-width: 100%; }
   .step:nth-child(2) .step__arrow { display: grid; }
   .step__arrow { top: auto; bottom: -26px; right: auto; left: 50%; margin: 0 0 0 -22px; }
   .step__arrow svg { transform: rotate(90deg); }
-  .step__art { margin: var(--pad-sm) 0; }
+  .step__art { margin: var(--pad-sm) 0; height: 200px; }
+  /* рамка без позиціонування (стрілка рахується від картки), тож фото лягає в сітку рамки, а не на всю картку */
+  .step__photo { position: relative; inset: auto; grid-area: 1 / 1; margin: -12px; }
+  .step__chip { grid-area: 1 / 1; z-index: 1; }
   /* minmax(0, 1fr): кнопка з nowrap більше не розпирає колонку за край картки */
   .supply { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .supply__list li { padding: var(--pad-sm); }
   /* один ритм: заголовок → 16 → кнопка → 16 → картки, між картками 8 */
   .supply__head { flex-direction: column; align-items: stretch; gap: var(--space-2); margin-bottom: 8px; }
-  /* довгий підпис на вузькому екрані переходить у другий рядок, а не залазить під коло */
-  .supply__head .btn { justify-content: space-between; white-space: normal; line-height: 1.2; }
+  .supply__head .btn { justify-content: space-between; }
 }
 
 /* ---------- Блок 6. Питання та відповіді ---------- */
@@ -1969,13 +1998,15 @@ img { display: block; max-width: 100%; }
     flex-direction: column;
     position: absolute;
     top: 92px; left: var(--gutter); right: var(--gutter);
-    padding: 8px;
+    gap: 0;
+    padding: var(--space-2) 8px;
     background: var(--white);
     border: 1px solid var(--line);
     border-radius: 12px;
     box-shadow: 0 20px 40px -20px rgba(32, 26, 23, .25);
   }
-  .nav.is-open .nav__menu a { padding: 14px 12px; }
+  /* пункти щільно, але зручно натискати: 44px на рядок */
+  .nav.is-open .nav__menu a { display: flex; align-items: center; min-height: 44px; padding: 10px 12px; font-size: 16px; }
 }
 @media (max-width: 1200px) {
   /* на вузькому десктопі й планшеті жили кабелю не мають заходити під заголовок */
@@ -2050,7 +2081,7 @@ img { display: block; max-width: 100%; }
       </span>
     </a>
     <button class="btn-round burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="menu">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 7h14M3 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="burger__lines" aria-hidden="true"><i></i><i></i></span>
     </button>
   </div>
  </div>
@@ -2849,7 +2880,7 @@ img { display: block; max-width: 100%; }
     <div class="sec__head">
       <span class="sec__eyebrow">Як ми працюємо</span>
       <div>
-        <h2 class="sec__title" id="process-title">Чотири кроки до поставки.<br><span>Ваш запит веде менеджер:<br>від підбору до відвантаження.</span></h2>
+        <h2 class="sec__title" id="process-title">Чотири кроки до поставки.<br><span>Ваш запит веде менеджер:<br> від підбору до відвантаження.</span></h2>
       </div>
     </div>
 
@@ -2899,7 +2930,7 @@ img { display: block; max-width: 100%; }
       <div class="supply__head">
         <h3 class="supply__title">Для відділу постачання</h3>
         <a class="btn btn--primary" href="#contacts">
-          Запросити комерційну пропозицію
+          Запросити пропозицію
           <span class="btn__ico btn__ico--arrow" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L8.5 3.5M13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </a>
       </div>
@@ -3186,10 +3217,12 @@ img { display: block; max-width: 100%; }
   burger.addEventListener('click', () => {
     const open = nav.classList.toggle('is-open');
     burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Закрити меню' : 'Меню');
   });
   nav.querySelectorAll('.nav__menu a').forEach(a => a.addEventListener('click', () => {
     nav.classList.remove('is-open');
     burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Меню');
   }));
 
   // Квадрати в hero: розкидаємо по всіх клітинках праворуч від тексту й над цифрами.
