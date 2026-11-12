@@ -821,9 +821,6 @@ img { display: block; max-width: 100%; }
   .lead-brand__actions .btn { white-space: normal; line-height: 1.2; }
   .lead-brand__tag { font-size: 12px; }
   .lead-brand__actions { gap: 8px; }
-  /* плашки тягнуться до краю: кожен рядок заповнений, без порожнечі праворуч */
-  .lead-brand li { flex: 1 1 auto; text-align: center; }
-  .lead-brand ul.is-measure li { flex: none; }
   .lead-brand__actions .btn { padding-left: 18px; gap: 8px; }
   /* на телефоні плашки бренду без кнопок: знак по центру */
   .tile__actions { display: none; }
@@ -3306,7 +3303,13 @@ img { display: block; max-width: 100%; }
     };
     layout();
     let t;
-    window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(layout, 150); });
+    // лише при зміні ширини: прокрутка на телефоні змінює висоту вікна, і квадрати з’являлися б наново
+    let sqW = innerWidth;
+    window.addEventListener('resize', () => {
+      if (innerWidth === sqW) return;
+      sqW = innerWidth;
+      clearTimeout(t); t = setTimeout(layout, 150);
+    });
   })();
 
   // Заголовки секцій: перша частина темнішає, поки заголовок піднімається
@@ -3471,7 +3474,6 @@ img { display: block; max-width: 100%; }
   const packChips = () => {
     const items = [...pChips.children];
     if (items.length < 3 || !pChips.offsetParent) return;
-    pChips.classList.add('is-measure');
     const W = pChips.clientWidth, gap = parseFloat(getComputedStyle(pChips).columnGap) || 0;
     const sized = items.map(el => ({ el, w: el.getBoundingClientRect().width })).sort((a, b) => b.w - a.w);
     const rows = [];
@@ -3481,7 +3483,6 @@ img { display: block; max-width: 100%; }
       else rows.push({ items: [it], left: W - it.w });
     });
     rows.forEach(r => r.items.forEach(it => pChips.appendChild(it.el)));
-    pChips.classList.remove('is-measure');
   };
   const showBrand = (name, animate) => {
     const b = BRANDS[name];
@@ -3516,7 +3517,15 @@ img { display: block; max-width: 100%; }
   };
   const pick = name => { current = name; showBrand(name); };
   fitPanel();
-  addEventListener('resize', fitPanel);
+  // перераховуємо лише при зміні ширини: на телефоні під час прокрутки змінюється висота вікна
+  // (ховається адресний рядок), і повне перемальовування картки давало мерехтіння плашок
+  let fitW = innerWidth, fitT;
+  addEventListener('resize', () => {
+    if (innerWidth === fitW) return;
+    fitW = innerWidth;
+    clearTimeout(fitT);
+    fitT = setTimeout(fitPanel, 150);
+  });
   // ширини плашок залежать від Onest: перераховуємо, коли шрифт завантажився
   if (document.fonts) document.fonts.ready.then(fitPanel);
   tiles.forEach(t => t.querySelector('.tile__open').addEventListener('click', () => {
