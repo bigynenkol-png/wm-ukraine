@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Політика конфіденційності | WM Ukraine</title>
 <meta name="description" content="Які персональні дані збирає сайт WM Ukraine, навіщо, хто має до них доступ, скільки вони зберігаються і як скористатися своїми правами.">
+<link rel="alternate" hreflang="uk" href="https://bigynenkol-png.github.io/wm-ukraine/privacy.html">
+<link rel="alternate" hreflang="en" href="https://bigynenkol-png.github.io/wm-ukraine/privacy-en.html">
+<link rel="alternate" hreflang="x-default" href="https://bigynenkol-png.github.io/wm-ukraine/privacy.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -185,6 +188,33 @@ img { display: block; max-width: 100%; }
 .nav__menu a:hover { background: var(--surface); }
 
 .nav__right { display: flex; align-items: center; gap: 16px; }
+/* Перемикач мови UA / EN: активна мова на білій плашці */
+.lang {
+  display: flex;
+  flex: none;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+.lang a {
+  display: grid;
+  place-items: center;
+  min-width: 38px; height: 30px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: var(--ink-2);
+  transition: background .2s var(--ease), color .2s var(--ease);
+}
+.lang a:hover { color: var(--black); }
+.lang a[aria-current="page"] {
+  background: var(--white);
+  color: var(--black);
+  box-shadow: 0 1px 2px rgba(32, 26, 23, .12);
+}
 /* Телефон і графік роботи, без іконки */
 .contact {
   display: flex;
@@ -257,6 +287,22 @@ img { display: block; max-width: 100%; }
 .ft__list a:hover, .ft__legal a:hover { color: var(--orange-text); }
 .ft__strong { font-weight: 600; color: var(--black); }
 .ft__msg { display: flex; gap: 8px; margin-top: var(--space-3); }
+/* Перемикач мови у футері: під графіком, в одному рядку з месенджерами сусідньої колонки, тієї ж висоти 40px */
+.ft__lang { width: fit-content; margin-top: var(--space-3); }
+.ft__lang a { height: 34px; }
+/* На десктопі «Контакти» й «Офіс» ділять спільні рядки (заголовок, список, кнопки):
+   навіть коли адреса переноситься, перемикач стоїть точно в рядку з месенджерами */
+@media (min-width: 1101px) {
+  .ft__inner {
+    grid-template-areas:
+      "brand c1 c2 c3"
+      "brand c1 c2 c3"
+      "brand c1 c2 c3"
+      "legal c1 c2 c3";
+    grid-template-rows: auto auto auto 1fr;
+  }
+  .ft__c2, .ft__c3 { display: grid; grid-row: 1 / -1; grid-template-rows: subgrid; row-gap: 0; justify-items: start; }
+}
 /* Пункти меню без заголовка колонки, тим самим стилем, що й заголовки «Контакти» та «Офіс» */
 .ft__nav { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
 .ft__nav a { font-size: 16px; font-weight: 600; letter-spacing: -.01em; line-height: 1.4; transition: color .2s var(--ease); }
@@ -317,6 +363,7 @@ img { display: block; max-width: 100%; }
   .ft__logo img { height: 56px; }
   .ft__tagline { max-width: none; margin: 0 auto; text-wrap: balance; }
   .ft__msg { justify-content: center; }
+  .ft__lang { margin-inline: auto; }
 }
 
 @media (max-width: 1280px) {
@@ -349,6 +396,7 @@ img { display: block; max-width: 100%; }
   .nav .btn__label { display: none; }
   .btn-round { width: 48px; height: 48px; }
   .nav.is-open .nav__menu { top: 80px; }
+  .lang a { height: 38px; }  /* на телефоні зручніше натискати */
   .btn { justify-content: space-between; }
 }
 
@@ -606,6 +654,10 @@ img { display: block; max-width: 100%; }
       <a href="#" aria-label="WhatsApp"><i style="--icon:url(https://cdn.jsdelivr.net/npm/simple-icons@13.0.0/icons/whatsapp.svg)"></i></a>
       <a href="#" aria-label="Telegram"><i style="--icon:url(https://cdn.jsdelivr.net/npm/simple-icons@13.0.0/icons/telegram.svg)"></i></a>
     </nav>
+    <nav class="lang" aria-label="Мова сайту">
+      <a href="privacy.html" lang="uk" hreflang="uk" aria-current="page">UA</a>
+      <a href="privacy-en.html" lang="en" hreflang="en">EN</a>
+    </nav>
     <a class="btn btn--primary btn--sm" href="index.html#contacts" aria-label="Запитати ціну">
       <span class="btn__label">Запитати ціну</span>
       <span class="btn__ico btn__ico--arrow" aria-hidden="true">
@@ -803,6 +855,10 @@ img { display: block; max-width: 100%; }
         <li><a href="https://www.google.com/maps/search/?api=1&amp;query=%D0%9A%D0%B8%D1%97%D0%B2%2C+%D0%A7%D0%BE%D0%BA%D0%BE%D0%BB%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9+%D0%B1%D1%83%D0%BB%D1%8C%D0%B2%D0%B0%D1%80%2C+42%D0%90" target="_blank" rel="noopener" aria-label="Київ, Чоколівський бульвар, 42А, офіс 135. Відкриється карта в новій вкладці">Київ, Чоколівський бульвар, 42А, офіс&nbsp;135</a></li>
         <li>пн–пт 9:00–18:00</li>
       </ul>
+      <nav class="lang ft__lang" aria-label="Мова сайту">
+        <a href="privacy.html" lang="uk" hreflang="uk" aria-current="page">UA</a>
+        <a href="privacy-en.html" lang="en" hreflang="en">EN</a>
+      </nav>
     </div>
 
     <div class="ft__legal">
@@ -822,6 +878,10 @@ img { display: block; max-width: 100%; }
     const open = nav.classList.toggle('is-open');
     burger.setAttribute('aria-expanded', open);
   });
+  // Перемикач мови веде на той самий розділ іншої версії
+  document.querySelectorAll('.lang a:not([aria-current])').forEach(a => a.addEventListener('click', () => {
+    a.href = a.getAttribute('href').split('#')[0] + location.hash;
+  }));
 
   // Зміст: підсвічуємо розділ, який зараз читають
   const links = [...document.querySelectorAll('.toc a')];
