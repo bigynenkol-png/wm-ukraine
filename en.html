@@ -1809,6 +1809,7 @@ img { display: block; max-width: 100%; }
   box-shadow: 0 20px 40px -20px rgba(32, 26, 23, .25);
 }
 .ms__list[hidden] { display: none; }
+.ms__list:focus { outline: none; }  /* tabindex="-1": клик по пункту не закрывает список в Chrome */
 .ms__opt { align-items: center; padding: 10px 12px; border-radius: 10px; font-size: 15px; color: var(--black); transition: background .2s var(--ease); }
 .ms__opt:hover { background: var(--surface); }
 .ms__opt--any { grid-column: 1 / -1; margin-top: 4px; border-top: 1px solid var(--line); border-radius: 0 0 10px 10px; }
@@ -3185,7 +3186,7 @@ img { display: block; max-width: 100%; }
               <ul class="ms__chips" id="rq-brand-chips" aria-label="Selected brands"></ul>
               <button class="ms__toggle" type="button" id="rq-brand-btn" aria-labelledby="rq-brand-label" aria-expanded="false" aria-controls="rq-brand-list"><span class="ms__ph">Choose a brand (optional)</span></button>
             </div>
-            <fieldset class="ms__list" id="rq-brand-list" hidden>
+            <fieldset class="ms__list" id="rq-brand-list" tabindex="-1" hidden>
               <legend class="sr-only">Brand</legend>
               <label class="check ms__opt"><input type="checkbox" name="brand" value="AUER Signal"><span>AUER Signal</span></label>
               <label class="check ms__opt"><input type="checkbox" name="brand" value="Bernstein"><span>Bernstein</span></label>
