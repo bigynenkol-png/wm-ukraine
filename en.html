@@ -165,6 +165,7 @@ img { display: block; max-width: 100%; }
 .nav.is-scrolled { padding-top: 10px; }
 .nav.is-scrolled .nav__card { box-shadow: 0 1px 0 var(--line), 0 14px 34px -18px rgba(32, 26, 23, .35); }
 .nav__bar {
+  flex: none;
   display: flex;
   align-items: center;
   gap: clamp(20px, 3vw, 48px);
@@ -184,12 +185,13 @@ img { display: block; max-width: 100%; }
   font-size: 15px;
   font-weight: 500;
   letter-spacing: -.01em;
+  white-space: nowrap;
   transition: background .2s var(--ease);
 }
 .nav__menu a:hover { background: var(--surface); }
 .nav__cta { display: none; }
 
-.nav__right { display: flex; align-items: center; gap: 16px; }
+.nav__right { flex: none; display: flex; align-items: center; gap: 16px; }
 /* Перемикач мови UA / EN: активна мова на білій плашці */
 .lang {
   display: flex;
@@ -229,7 +231,7 @@ img { display: block; max-width: 100%; }
 .contact:hover .contact__phone { color: var(--orange-text); }
 .contact__txt { display: flex; flex-direction: column; align-items: flex-end; }
 .contact__phone { font-weight: 600; font-size: 15px; white-space: nowrap; }
-.contact__hours { font-size: 12px; color: var(--ink-2); }
+.contact__hours { font-size: 12px; color: var(--ink-2); white-space: nowrap; }
 .messengers { display: flex; gap: 6px; }
 .messengers a {
   display: grid;
@@ -2041,14 +2043,17 @@ img { display: block; max-width: 100%; }
   .ft__lang { margin-inline: auto; }
 }
 
-@media (max-width: 1280px) {
-  .messengers { display: none; }
-  .nav__menu a { white-space: nowrap; }
-}
+/* Скрипт під шапкою стискає її по кроках, щойно щось перестає влазити в один рядок:
+   спершу ховає месенджери (is-lite), далі вмикає бургер (is-compact). Без скрипту — пороги 1280 і 1100px */
+.nav.is-lite .messengers, .nav.is-compact .messengers { display: none; }
+@media (max-width: 1280px) { .nav:not(.is-measured) .messengers { display: none; } }
+.nav.is-compact .nav__menu, .nav.is-compact .contact { display: none; }
+.nav.is-compact .burger { display: grid; }
 @media (max-width: 1100px) {
-  .nav__menu, .contact { display: none; }
-  .burger { display: grid; }
-  .nav.is-open .nav__menu {
+  .nav:not(.is-measured) .nav__menu, .nav:not(.is-measured) .contact { display: none; }
+  .nav:not(.is-measured) .burger { display: grid; }
+}
+.nav.is-open .nav__menu {
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -2062,7 +2067,6 @@ img { display: block; max-width: 100%; }
   }
   /* пункти щільно, але зручно натискати: 44px на рядок */
   .nav.is-open .nav__menu a { display: flex; align-items: center; min-height: 44px; padding: 10px 12px; font-size: 16px; }
-}
 @media (max-width: 1200px) {
   /* на вузькому десктопі й планшеті жили кабелю не мають заходити під заголовок */
   .hero__main { max-width: 52vw; }
@@ -2173,6 +2177,35 @@ img { display: block; max-width: 100%; }
   </div>
  </div>
 </header>
+<script>
+  // Шапка: якщо пункти меню, телефон чи кнопка не влазять в один рядок (або впритул), вмикаємо бургер
+  (() => {
+    const nav = document.getElementById('nav');
+    const bar = nav.querySelector('.nav__bar');
+    const right = nav.querySelector('.nav__right');
+    const burger = nav.querySelector('.burger');
+    const MIN_GAP = 32;  // мінімальний зазор між меню і правою частиною
+    const fit = () => {
+      const tooTight = () => right.getBoundingClientRect().left - bar.getBoundingClientRect().right < MIN_GAP;
+      nav.classList.add('is-measured');
+      nav.classList.remove('is-lite', 'is-compact');
+      let tight = matchMedia('(max-width: 720px)').matches;
+      if (!tight && tooTight()) { nav.classList.add('is-lite'); tight = tooTight(); }
+      nav.classList.toggle('is-compact', tight);
+      if (!tight && nav.classList.contains('is-open')) {
+        nav.classList.remove('is-open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.setAttribute('aria-label', burger.dataset.label || burger.getAttribute('aria-label'));
+      }
+    };
+    burger.dataset.label = burger.getAttribute('aria-label');
+    fit();
+    let raf = 0;
+    window.addEventListener('resize', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); });
+    if (document.fonts) document.fonts.ready.then(fit);
+    window.addEventListener('load', fit);
+  })();
+</script>
 
 <main>
   <section class="hero" id="top" aria-labelledby="hero-title">
@@ -2623,7 +2656,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/weidmuller-2026.pdf" target="_blank" rel="noopener" aria-label="Weidmüller authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/weidmuller-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2645,7 +2678,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/conductix-2026.pdf" target="_blank" rel="noopener" aria-label="Conductix-Wampfler authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/conductix-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2667,7 +2700,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/auer-2026.pdf" target="_blank" rel="noopener" aria-label="AUER Signal authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/auer-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2689,7 +2722,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/lumel-2026.pdf" target="_blank" rel="noopener" aria-label="LUMEL authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/lumel-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2711,7 +2744,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/bernstein-2026.pdf" target="_blank" rel="noopener" aria-label="Bernstein authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/bernstein-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2733,7 +2766,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/mr-2026.pdf" target="_blank" rel="noopener" aria-label="MR / Reinhausen authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/mr-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2755,7 +2788,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/tratos-2026.pdf" target="_blank" rel="noopener" aria-label="Tratos authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/tratos-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2777,7 +2810,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/sibre-2026.pdf" target="_blank" rel="noopener" aria-label="Sibre authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/sibre-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2799,7 +2832,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/helmke-2026.pdf" target="_blank" rel="noopener" aria-label="Helmke authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/helmke-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2821,7 +2854,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/proconect-2026.pdf" target="_blank" rel="noopener" aria-label="Proconect authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/proconect-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2844,7 +2877,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/ortac-2026.pdf" target="_blank" rel="noopener" aria-label="Ortac authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/ortac-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2866,7 +2899,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/hellermanntyton-2026.pdf" target="_blank" rel="noopener" aria-label="HellermannTyton authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/hellermanntyton-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2888,7 +2921,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/meskotex-2026.pdf" target="_blank" rel="noopener" aria-label="Meskotex authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/meskotex-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2911,7 +2944,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/lm-therm-2026.pdf" target="_blank" rel="noopener" aria-label="Lm-Therm authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/lm-therm-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2933,7 +2966,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/frigortec-2026.pdf" target="_blank" rel="noopener" aria-label="FrigorTec authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/frigortec-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
@@ -2955,7 +2988,7 @@ img { display: block; max-width: 100%; }
             </div>
           </div></div></div>
           <a class="cert__doc" href="docs/certs/vlux-2026.pdf" target="_blank" rel="noopener" aria-label="VLux authorisation letter, open PDF">
-            <span class="cert__sheet" style="--img:url(img/certs/vlux-letter.jpg)"></span>
+            <span class="cert__sheet"></span>
             <span class="cert__cap">PDF · 2026</span>
           </a>
         </li>
