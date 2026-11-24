@@ -10,7 +10,7 @@
 <link rel="alternate" hreflang="x-default" href="https://bigynenkol-png.github.io/wm-ukraine/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="img/hero-cable-macro.webp">
 <style>
 /* Токени з palette.html */
@@ -30,7 +30,7 @@
   --surface: #F7F6F5;
   --white: #FFFFFF;
   --f-display: "Onest", "Helvetica Neue", Arial, sans-serif;
-  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --f-mono: "Onest", "Helvetica Neue", Arial, sans-serif;  /* мітки: Onest Medium капсом з розрядкою */
 
   --gutter: clamp(16px, 3vw, 40px);
 
@@ -209,7 +209,7 @@ img { display: block; max-width: 100%; }
   font-family: var(--f-mono);
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: .04em;
+  letter-spacing: .1em;
   color: var(--ink-2);
   transition: background .2s var(--ease), color .2s var(--ease);
 }
@@ -835,6 +835,23 @@ img { display: block; max-width: 100%; }
   .lead-brand, .bx.is-open .lead-brand { position: static; order: -1; }
   .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 128px; }
 }
+/* Планшет (дотик): кнопки видно завжди, тож знак менший і не заходить під них,
+   а «+N брендів» розкладено як на телефоні: цифра вгорі, кнопка внизу */
+@media (max-width: 1100px) and (hover: none) {
+  .tiles { grid-auto-rows: 148px; }
+  .tile__logo { width: min(calc(var(--w) * .72), 76%); max-height: 64px; object-fit: contain; }
+  .tile--more {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 16px 10px 10px 16px;
+  }
+  .tile--more .tile--more__count,
+  .tile--more:hover .tile--more__count { transform: none; }
+  .tile--more__num { font-size: 48px; }
+  .tile--more__btn { position: static; white-space: nowrap; }
+}
 @media (max-width: 720px) {
   .sec__head { grid-template-columns: 1fr; gap: 12px; }
   /* заголовки на всю ширину: без обмеження в 17em і без ручних переносів усередині сірої частини */
@@ -1039,7 +1056,14 @@ img { display: block; max-width: 100%; }
 /* Далі в одну лінію не вміщається: плашки комплекту під текстом */
 @media (max-width: 1279px) {
   .kit { grid-template-columns: minmax(0, 1fr) auto; }
-  .kit__set { grid-column: 1 / -1; grid-row: 2; }
+  .kit__set { grid-column: 1; grid-row: 2; }
+  /* кнопка праворуч унизу, на одній лінії з плашками, а не посередині порожньої колонки */
+  .kit > .btn { grid-column: 2; grid-row: 1 / 3; align-self: end; }
+}
+/* планшет вертикально: поруч із плашками кнопка не вміщається, тож вона окремим рядком під ними */
+@media (max-width: 1000px) {
+  .kit { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+  .kit > .btn { grid-column: 1; grid-row: 3; justify-self: start; }
 }
 /* Без широкого екрана: горизонтальна стрічка, усі картки розгорнуті */
 @media (max-width: 1280px) {
@@ -1084,6 +1108,7 @@ img { display: block; max-width: 100%; }
   }
   .kit .br-narrow, .kit .br-wide { display: none; }
   .kit .btn { justify-content: space-between; }
+  .kit > .btn { grid-column: auto; grid-row: auto; justify-self: stretch; }
 }
 
 /* ---------- Блок 4. Чому WM Ukraine ---------- */
@@ -1209,6 +1234,8 @@ img { display: block; max-width: 100%; }
 .cert__num {
   font-family: var(--f-mono);
   font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .04em;
   line-height: 32px;
   color: var(--ink-3);
   transition: color .2s var(--ease);
@@ -1351,7 +1378,8 @@ img { display: block; max-width: 100%; }
 .step__label {
   font-family: var(--f-mono);
   font-size: 11px;
-  letter-spacing: .04em;
+  font-weight: 500;
+  letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--orange-text);
 }
@@ -1436,7 +1464,7 @@ img { display: block; max-width: 100%; }
 .supply {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-3) 8px;
+  gap: 8px;  /* між картками однаково по горизонталі й вертикалі */
   margin-top: var(--gap-block);
   padding: var(--pad-sm);
   border: 1px solid var(--line);
@@ -1445,6 +1473,7 @@ img { display: block; max-width: 100%; }
 }
 .supply__head {
   grid-column: 1 / -1;
+  margin-bottom: calc(var(--space-3) - 8px);  /* від заголовка до карток, як і раніше */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2067,12 +2096,21 @@ img { display: block; max-width: 100%; }
   }
   /* пункти щільно, але зручно натискати: 44px на рядок */
   .nav.is-open .nav__menu a { display: flex; align-items: center; min-height: 44px; padding: 10px 12px; font-size: 16px; }
-@media (max-width: 1200px) {
-  /* на вузькому десктопі й планшеті жили кабелю не мають заходити під заголовок */
-  .hero__main { max-width: 52vw; }
-  .hero__img { right: -50vw; }
+@media (max-width: 1279px) {
+  /* вузький десктоп і планшет горизонтально: текст на половину ширини, фото праворуч.
+     Фото на всю висоту секції (ширина = 1.79 × висота), кінчики жил на 29% ширини кадру,
+     тому зсуваємо фото так, щоб жили починалися одразу за текстом, а барабан обрізав правий край */
+  .hero__main { max-width: 50vw; }
+  .hero__img {
+    right: auto;
+    left: calc(var(--gutter) + 50vw + 24px - .52 * clamp(720px, 100svh, 980px));
+  }
+  .hero__sq {
+    left: calc(var(--gutter) + 50vw + 24px);
+    left: round(up, calc(var(--gutter) + 50vw + 24px), 64px);
+  }
 }
-@media (max-width: 900px) {
+@media (max-width: 900px), (max-width: 1100px) and (orientation: portrait) {
   /* фото переходить під текст і обрізається правим краєм */
   .hero { min-height: 0; justify-content: flex-start; }
   .hero__main { max-width: none; margin: 0; }
@@ -2092,6 +2130,11 @@ img { display: block; max-width: 100%; }
   }
   .hero__sq { z-index: 1; inset: -80px calc(var(--gutter) * -1) -140px; }  /* над фото: квадрати напівпрозорі */
   .hero__img { position: relative; z-index: auto; top: auto; bottom: auto; right: auto; height: auto; width: 170%; margin: -80px -70% -140px auto; animation: none; }
+}
+@media (min-width: 721px) and (max-width: 1100px) and (orientation: portrait) {
+  /* планшет вертикально: фото менше, щоб цифри вміщалися на першому екрані */
+  .hero { gap: var(--space-4); }
+  .hero__img { width: 130%; margin: -40px -30% -90px auto; }
 }
 @media (max-width: 720px) {
   /* усі картки на телефоні з однаковим внутрішнім відступом, як у помаранчевої Weidmüller */
@@ -3369,7 +3412,8 @@ img { display: block; max-width: 100%; }
       const ox = ((br.left - hr.left) % CELL + CELL) % CELL, oy = ((br.top - hr.top) % CELL + CELL) % CELL;
       box.style.setProperty('--ox', ox + 'px');
       box.style.setProperty('--oy', oy + 'px');
-      const mobile = matchMedia('(max-width: 900px)').matches;
+      const mobile = matchMedia('(max-width: 900px), (max-width: 1100px) and (orientation: portrait)').matches;
+      const phone = matchMedia('(max-width: 720px)').matches;
       const cols = Math.floor((box.clientWidth + ox) / CELL);
       // ряди лише над картками з цифрами
       // на телефоні — до низу фото (під скляними картками квадрати лише просвічують)
@@ -3383,15 +3427,16 @@ img { display: block; max-width: 100%; }
       const acts = document.querySelector('.hero__actions');
       const rowsStart = mobile && acts ? Math.ceil((acts.getBoundingClientRect().bottom + 8 - br.top + oy) / CELL) : 2;
       for (let y = rowsStart; y < rowsEnd; y++) {
-        for (let x = ox ? 1 : 0; x < cols; x++) {
+        // на планшеті вертикально квадрати лише біля фото, ліва третина порожня
+        for (let x = mobile && !phone ? Math.floor(cols * .35) : (ox ? 1 : 0); x < cols; x++) {
           const r = rnd();
-          if (r > (mobile ? .5 : .28)) continue;
+          if (r > (phone ? .5 : .28)) continue;
           let near = false;
           for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (taken.has((x + dx) + ':' + (y + dy))) near = true;
           if (near) continue;
           taken.add(x + ':' + y);
           // на телефоні квадратів мало: помаранчеві через один, щоб їх було видно
-          const cls = (mobile ? html.length % 2 === 0 : rnd() < .45) ? ' class="o"' : '';
+          const cls = (phone ? html.length % 2 === 0 : rnd() < .45) ? ' class="o"' : '';
           html.push(`<i${cls} style="--x:${x};--y:${y};--d:${(.1 + rnd() * .6).toFixed(2)}s"></i>`);
         }
       }

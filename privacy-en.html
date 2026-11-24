@@ -10,7 +10,7 @@
 <link rel="alternate" hreflang="x-default" href="https://bigynenkol-png.github.io/wm-ukraine/privacy.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap">
 <style>
 /* Токени з palette.html */
 :root {
@@ -29,7 +29,7 @@
   --surface: #F7F6F5;
   --white: #FFFFFF;
   --f-display: "Onest", "Helvetica Neue", Arial, sans-serif;
-  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --f-mono: "Onest", "Helvetica Neue", Arial, sans-serif;  /* мітки: Onest Medium капсом з розрядкою */
 
   --gutter: clamp(16px, 3vw, 40px);
 
@@ -205,7 +205,7 @@ img { display: block; max-width: 100%; }
   font-family: var(--f-mono);
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: .04em;
+  letter-spacing: .1em;
   color: var(--ink-2);
   transition: background .2s var(--ease), color .2s var(--ease);
 }
@@ -550,7 +550,6 @@ img { display: block; max-width: 100%; }
   font-weight: 500;
   letter-spacing: 0;
   color: var(--orange-text);
-  transform: translateY(-4px);
 }
 .doc h3 { margin: var(--space-4) 0 var(--space-2); font-size: 18px; font-weight: 600; letter-spacing: -.01em; }
 .doc p, .doc li { font-size: 17px; line-height: 1.6; color: var(--ink-2); text-wrap: pretty; }
