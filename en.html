@@ -10,12 +10,13 @@
 <link rel="alternate" hreflang="x-default" href="https://bigynenkol-png.github.io/wm-ukraine/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap">
 <link rel="preload" as="image" href="img/hero-cable-macro.webp">
 <style>
 /* Токени з palette.html */
 :root {
   --orange: #F97900;
+  --orange-btn: #EE7000;   /* фон основної кнопки: білий підпис 16 px Bold дає APCA Lc 61 */
   --orange-hover: #E06D00;
   --orange-pressed: #C76100;
   --orange-text: #B35600;
@@ -106,10 +107,12 @@ img { display: block; max-width: 100%; }
 
 /* На помаранчевому — білий текст і біле коло з помаранчевою стрілкою */
 .btn--primary {
-  background: var(--orange);
+  background: var(--orange-btn);
   color: var(--white);
+  font-size: 16px;
+  font-weight: 700;
 }
-.btn--primary .btn__ico { background: var(--white); color: var(--orange); }
+.btn--primary .btn__ico { background: var(--white); color: var(--orange-btn); }
 .btn--primary:hover { background: var(--orange-hover); }
 .btn--primary:active { background: var(--orange-pressed); }
 
@@ -2150,7 +2153,7 @@ img { display: block; max-width: 100%; }
   /* кругла кнопка зі стрілкою з шапки переїхала в меню: під пунктами, окремим блоком */
   .nav__right > .btn--primary { display: none; }
   .nav__cta { display: block; margin-top: var(--space-3); }
-  .nav.is-open .nav__menu .nav__cta .btn { width: 100%; min-height: 0; padding: 0 7px 0 22px; border-radius: 999px; justify-content: space-between; font-size: 15px; }
+  .nav.is-open .nav__menu .nav__cta .btn { width: 100%; min-height: 0; padding: 0 7px 0 22px; border-radius: 999px; justify-content: space-between; font-size: 16px; }
   .nav.is-open .nav__menu .nav__cta .btn:hover { background: var(--orange-hover); }
 
   .hero { padding-top: calc(84px + var(--space-4)); gap: var(--space-4); }
